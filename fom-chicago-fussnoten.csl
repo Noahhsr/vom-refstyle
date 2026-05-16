@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0" demote-non-dropping-particle="display-and-sort" default-locale="de-DE">
+  <info>
+    <title>FOM Hochschule - Chicago Style Fußnoten</title>
+    <id>fom-chicago-fussnoten</id>
+    <author>
+      <name>Custom FOM Style</name>
+    </author>
+    <category citation-format="note"/>
+    <category field="generic-base"/>
+    <summary>FOM Hochschule Chicago-Style für Fußnoten. Stichwort muss im Feld "Short Title" in Mendeley eingetragen werden. "Vgl." muss manuell ergänzt werden.</summary>
+    <updated>2024-01-01T00:00:00+00:00</updated>
+  </info>
+
+  <locale xml:lang="de">
+    <terms>
+      <term name="ibid">ebd.</term>
+      <term name="et-al">et al.</term>
+      <term name="editor" form="short">
+        <single>Hrsg.</single>
+        <multiple>Hrsg.</multiple>
+      </term>
+      <term name="edition" form="short">Aufl.</term>
+      <term name="volume" form="short">Bd.</term>
+      <term name="page" form="short">
+        <single>S.</single>
+        <multiple>S.</multiple>
+      </term>
+      <term name="accessed">Zugriff</term>
+      <term name="and">und</term>
+      <term name="in">in</term>
+    </terms>
+  </locale>
+
+  <!-- ==================== MACROS ==================== -->
+
+  <!-- Author for footnotes: Lastname, F. M. -->
+  <macro name="author-note">
+    <names variable="author">
+      <name form="long"
+            name-as-sort-order="all"
+            sort-separator=", "
+            initialize="true"
+            initialize-with=". "
+            delimiter=", "
+            delimiter-precedes-last="always"/>
+      <et-al term="et-al"/>
+      <substitute>
+        <names variable="editor"/>
+        <text variable="title" />
+      </substitute>
+    </names>
+  </macro>
+
+  <!-- Author for bibliography: Lastname, Firstname -->
+  <macro name="author-bib">
+    <names variable="author">
+      <name form="long"
+            name-as-sort-order="all"
+            sort-separator=", "
+            initialize="false"
+            delimiter=", "
+            delimiter-precedes-last="always"/>
+      <et-al term="et-al"/>
+      <substitute>
+        <names variable="editor"/>
+        <text variable="title"/>
+      </substitute>
+    </names>
+  </macro>
+
+  <!-- Editor for bibliography: Lastname, Firstname (Hrsg.) -->
+  <macro name="editor-bib">
+    <names variable="editor">
+      <name form="long"
+            name-as-sort-order="all"
+            sort-separator=", "
+            initialize="false"
+            delimiter=", "
+            delimiter-precedes-last="always"/>
+      <label form="short" prefix=" (" suffix=".)"/>
+    </names>
+  </macro>
+
+  <!-- Year or o. J. -->
+  <macro name="year">
+    <choose>
+      <if variable="issued">
+        <date variable="issued">
+          <date-part name="year"/>
+        </date>
+      </if>
+      <else>
+        <text value="o. J."/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- Edition: e.g. "3. Aufl." -->
+  <macro name="edition">
+    <choose>
+      <if is-numeric="edition">
+        <group delimiter=" ">
+          <number variable="edition" form="ordinal"/>
+          <text term="edition" />
+        </group>
+      </if>
+      <else-if variable="edition">
+        <text variable="edition" suffix=" Aufl."/>
+      </else-if>
+    </choose>
+  </macro>
+
+  <!-- Publisher place or o. O. -->
+  <macro name="publisher-place">
+    <choose>
+      <if variable="publisher-place">
+        <text variable="publisher-place"/>
+      </if>
+      <else>
+        <text value="o. O."/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- Short title (Stichwort) from "Short Title" field in Mendeley -->
+  <macro name="stichwort">
+    <text variable="title" />
+  </macro>
+
+  <!-- Locator: S. 12 -->
+  <macro name="locator">
+    <group delimiter=" ">
+      <label variable="locator" />
+      <text variable="locator"/>
+    </group>
+  </macro>
+
+  <!-- URL + access date for internet sources -->
+  <macro name="access">
+    <choose>
+      <if variable="URL">
+        <group delimiter=" ">
+          <text variable="URL" prefix="&lt;" suffix="&gt;"/>
+          <group prefix="[" suffix="]">
+            <text term="accessed" suffix=" "/>
+            <date variable="accessed">
+              <date-part name="year"/>
+              <date-part name="month" prefix="-" form="numeric-leading-zeros"/>
+              <date-part name="day" prefix="-" form="numeric-leading-zeros"/>
+            </date>
+          </group>
+        </group>
+      </if>
+    </choose>
+  </macro>
+
+  <!-- ==================== CITATION (Fußnoten) ==================== -->
+  <!--
+    Output example (indirect):  Vgl. Theisen, M. R., Wissenschaftliches Arbeiten, 2021, S. 157.
+    Output example (direct):    Theisen, M. R., Wissenschaftliches Arbeiten, 2021, S. 157.
+    NOTE: "Vgl." must be added manually before the footnote for indirect citations.
+    NOTE: Fill in the "Short Title" field in Mendeley with the Stichwort.
+  -->
+  <citation et-al-min="3" et-al-use-first="1" disambiguate-add-year-suffix="true">
+    <layout prefix="Vgl. " suffix="." delimiter="; ">
+      <choose>
+        <if position="ibid">
+          <text term="ibid"/>
+          <group prefix=", ">
+            <text macro="locator"/>
+          </group>
+        </if>
+        <else>
+          <group delimiter=", ">
+            <text macro="author-note"/>
+            <text macro="stichwort"/>
+            <text macro="year"/>
+            <text macro="locator"/>
+          </group>
+        </else>
+      </choose>
+    </layout>
+  </citation>
+
+  <!-- ==================== BIBLIOGRAPHY (Literaturverzeichnis) ==================== -->
+  <!--
+    Output example (monograph):
+    Theisen, Manuel R. (Wissenschaftliches Arbeiten, 2021): Wissenschaftliches Arbeiten –
+        Erfolgreich bei Bachelor- und Masterarbeiten, 18. Aufl., München: Vahlen, 2021
+  -->
+  <bibliography hanging-indent="true"
+                et-al-min="3"
+                et-al-use-first="1"
+                subsequent-author-substitute="–"
+                entry-spacing="1">
+    <sort>
+      <key macro="author-bib"/>
+      <key macro="year"/>
+      <key variable="title"/>
+    </sort>
+    <layout suffix="">
+      <choose>
+
+        <!-- Internet sources -->
+        <if type="webpage post post-weblog" match="any">
+          <group delimiter=" ">
+            <text macro="author-bib"/>
+            <group prefix="(" suffix="):">
+              <text macro="stichwort" suffix=", "/>
+              <text macro="year"/>
+            </group>
+            <text variable="title" suffix=","/>
+            <text macro="access"/>
+          </group>
+        </if>
+
+        <!-- Journal / newspaper articles -->
+        <else-if type="article-journal article-newspaper article-magazine" match="any">
+          <group delimiter=" ">
+            <text macro="author-bib"/>
+            <group prefix="(" suffix="):">
+              <text macro="stichwort" suffix=", "/>
+              <text macro="year"/>
+            </group>
+            <text variable="title" suffix=","/>
+            <group>
+              <text value="in: "/>
+              <text variable="container-title" suffix=","/>
+              <group prefix=" ">
+                <text variable="volume"/>
+                <date variable="issued" prefix=" (" suffix=")">
+                  <date-part name="year"/>
+                </date>
+              </group>
+              <group prefix=", ">
+                <text variable="issue" prefix="Nr. "/>
+              </group>
+              <group prefix=", S. ">
+                <text variable="page"/>
+              </group>
+            </group>
+          </group>
+        </else-if>
+
+        <!-- Book chapters / collected works -->
+        <else-if type="chapter paper-conference" match="any">
+          <group delimiter=" ">
+            <text macro="author-bib"/>
+            <group prefix="(" suffix="):">
+              <text macro="stichwort" suffix=", "/>
+              <text macro="year"/>
+            </group>
+            <text variable="title" suffix=","/>
+            <group>
+              <text value="in: "/>
+              <text macro="editor-bib" suffix=", "/>
+              <text variable="container-title" suffix=", "/>
+              <text macro="year" suffix=", "/>
+              <group prefix="S. ">
+                <text variable="page"/>
+              </group>
+            </group>
+          </group>
+        </else-if>
+
+        <!-- Monographs (default) -->
+        <else>
+          <group delimiter=" ">
+            <text macro="author-bib"/>
+            <group prefix="(" suffix="):">
+              <text macro="stichwort" suffix=", "/>
+              <text macro="year"/>
+            </group>
+            <text variable="title" suffix=","/>
+            <text macro="edition" suffix=","/>
+            <group suffix=",">
+              <text macro="publisher-place" suffix=": "/>
+              <text variable="publisher"/>
+            </group>
+            <text macro="year"/>
+          </group>
+        </else>
+
+      </choose>
+    </layout>
+  </bibliography>
+
+</style>
